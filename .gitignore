@@ -1,0 +1,22 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Wed Apr  2 17:54:02 2025
+
+@author: ZAINTEL2
+"""
+
+# Ignore Jupyter Notebook checkpoints
+**/.ipynb_checkpoints/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+*.log
+
+# Ignore large data files (optional)
+*.fits

@@ -1,0 +1,15 @@
+linesum-Ar_III-7136.fits
+linesum-H_I-6563.fits
+linesum-N_II-6548.fits
+linesum-N_II-6583.fits
+linesum-O_III-4959.fits
+linesum-O_III-5007.fits
+linesum-S_III-9069.fits
+mean-Ar_III-7136.fits
+mean-H_I-6563-patfixx.fits
+mean-N_II-6548-patfixx.fits
+mean-N_II-6583-patfixx.fits
+mean-O_III-4959-patfixx.fits
+mean-O_III-5007-patfixx.fits
+mean-S_III-9069-patfixx.fits
+

@@ -1,0 +1,22 @@
+{
+  "O_III-4959_mask_bin_2": {
+    "bins": 1,
+    "flux_thresh": 0.001,
+    "sigma_thresh": 2.0
+  },
+  "O_III-4959_mask_bin_4": {
+    "bins": 2,
+    "flux_thresh": 0.001,
+    "sigma_thresh": 2.0
+  },
+  "O_III-4959_mask_bin_8": {
+    "bins": 3,
+    "flux_thresh": 0.001,
+    "sigma_thresh": 3.0
+  },
+  "O_III-4959_mask_bin_16": {
+    "bins": 4,
+    "flux_thresh": 0.001,
+    "sigma_thresh": 3.0
+  }
+}

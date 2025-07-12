@@ -1,0 +1,32 @@
+# ---------- Dataset Names and Parameters ----------
+NAMES = H_I-6563 O_III-5007 O_III-4959 N_II-6548 N_II-6583 S_III-9069
+BINS  = 4        4          4          4          4          4
+FLUX  = 0.1      0.05       0.0167     0.0167      0.05      0.05
+SIGMA = 2.0      2.0        2.0        2.0        2.0        2.0
+
+# ---------- Paths ----------
+OUTPUT_DIR   = velocity_fields_maps
+NOTEBOOK_BIN = $(OUTPUT_DIR)/notebook_template_mask_bin_n.ipynb
+
+# ---------- Default target: run all
+all: $(NAMES:%=$(OUTPUT_DIR)/%_mask_bin.json)
+
+# ---------- Rule for each dataset ----------
+$(OUTPUT_DIR)/%_mask_bin.json:
+	$(eval IDX := $(shell echo $(NAMES) | tr ' ' '\n' | grep -n "^$*" | cut -d: -f1))
+	$(eval B := $(word $(IDX),$(BINS)))
+	$(eval F := $(word $(IDX),$(FLUX)))
+	$(eval S := $(word $(IDX),$(SIGMA)))
+	papermill $(NOTEBOOK_BIN) $(OUTPUT_DIR)/$*_mask_bin.ipynb \
+	-p name $* \
+	-p bins $(B) \
+	-p flux_thresh $(F) \
+	-p sigma_thresh $(S)
+
+# ---------- Clean rule ----------
+.PHONY: all clean
+
+
+
+
+

@@ -1,0 +1,14 @@
+NAMES = S_III-9069 # H_I-6563 N_II-6548 N_II-6583 O_III-4959 O_III-5007
+
+TEMPLATE    = templates/notebook_template_init_test.ipynb
+OUTPUT_DIR  = init_test
+PARAMS_FILE = params.py
+
+all: $(NAMES:%=$(OUTPUT_DIR)/%_init.ipynb)
+
+$(OUTPUT_DIR)/%_init.ipynb:
+	@echo "Running Papermill for $*"
+	$(eval PARAMS := $(shell python -c "import sys; sys.path.insert(0, '.'); from params import PARAMS; p = PARAMS['$*']; print(f'-p name_import {p[\"name_import\"]} -p line \"{p[\"line\"]}\" -p line_ {p[\"line_\"]}')"))
+	papermill $(TEMPLATE) $@ $(PARAMS)
+
+.PHONY: all

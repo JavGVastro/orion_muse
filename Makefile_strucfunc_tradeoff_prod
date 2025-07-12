@@ -1,0 +1,22 @@
+# ---------- Dataset Names (custom order) ----------
+NAMES = \
+  Ar_III-7136_mask_bin_2 \
+  Ar_III-7136_mask_bin_4 \
+  Ar_III-7136_mask_bin_8 \
+  Ar_III-7136_mask_bin_16 
+  
+   
+# ---------- Paths ----------
+STRUCT_DIR      = structure_function
+STRUCT_NOTEBOOK = $(STRUCT_DIR)/notebook_template_strucfunc.ipynb
+
+# ---------- Default target ------
+all: $(NAMES:%=$(STRUCT_DIR)/%_strucfunc.json)
+
+# ---------- Rule for each dataset ----------
+$(STRUCT_DIR)/%_strucfunc.json:
+	@echo "Running structure function for $*"
+	papermill $(STRUCT_NOTEBOOK) $(STRUCT_DIR)/$*_strucfunc.ipynb \
+		-p name $*
+
+.PHONY: all

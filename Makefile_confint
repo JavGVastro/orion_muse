@@ -1,0 +1,18 @@
+# ---------- Dataset names ----------
+NAMES = H_I-6563 O_III-5007 O_III-4959 N_II-6548 N_II-6583 S_III-9069
+
+# ---------- Paths ----------
+CONF_DIR      = confidence_intervals
+CONF_NOTEBOOK = $(CONF_DIR)/notebook_template_confint.ipynb
+
+# ---------- Default target ----------
+all: $(NAMES:%=$(CONF_DIR)/%_confint.json)
+
+# ---------- Rule for each dataset ----------
+$(CONF_DIR)/%_confint.json:
+	$(eval PARAMS := $(shell python params.py $*))
+	$(eval B := $(shell echo $(PARAMS) | python -c "import sys, json; print(json.load(sys.stdin)['bins'])"))
+	$(eval DATA := $(shell echo $(PARAMS) | python -c "import sys, json; print(json.load(sys.stdin)['data'])"))
+	$(eval NAME_FOR_NOTEBOOK := $*_mask_bin_$(B))
+	papermill $(CONF_NOTEBOOK) $(CONF_DIR)/$*_confint.ipynb \
+	-p name $(NAME_FOR_NOTEBOOK) -p data "$(DATA)"

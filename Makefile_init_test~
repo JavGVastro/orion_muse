@@ -1,0 +1,36 @@
+# ---------- Dataset Names ----------
+NAMES = H_I-6563 N_II-6548 N_II-6583 O_III-4959 O_III-5007
+
+# ---------- Paths ----------
+TEMPLATE_DIR   = template
+NOTEBOOK       = $(TEMPLATE_DIR)/notebook_template_init_test.ipynb
+OUTPUT_DIR     = executed
+YAML_FILE      = params.yaml
+
+# ---------- Default Target ----------
+all: $(NAMES:%=$(OUTPUT_DIR)/%_init.ipynb)
+
+# ---------- Rule for each dataset ----------
+$(OUTPUT_DIR)/%_init.ipynb:
+	@echo "Running Papermill for $*"
+	papermill $(NOTEBOOK) $@ -f $(YAML_FILE) -p name_import $*
+
+.PHONY: all
+NAMES = N_II-6548 N_II-6583 O_III-4959 O_III-5007
+
+NOTEBOOK = template/notebook_template_init_test.ipynb
+OUTPUT_DIR = init_outputs
+
+all: $(NAMES:%=$(OUTPUT_DIR)/%_init.json)
+
+$(OUTPUT_DIR)/%_init.json:
+	$(eval PARAMS := $(shell python params.py $*))
+	$(eval NAME_IMPORT := $(shell echo $(PARAMS) | python -c "import sys, json; print(json.load(sys.stdin)['name_import'])"))
+	$(eval LINE := $(shell echo $(PARAMS) | python -c "import sys, json; print(json.load(sys.stdin)['line'])"))
+	$(eval LINE_ := $(shell echo $(PARAMS) | python -c "import sys, json; print(json.load(sys.stdin)['line_'])"))
+	papermill $(NOTEBOOK) $(OUTPUT_DIR)/$*_init.ipynb \
+		-p name_import $(NAME_IMPORT) \
+		-p line "$(LINE)" \
+		-p line_ $(LINE_)
+
+.PHONY: all

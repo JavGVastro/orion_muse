@@ -1,0 +1,29 @@
+# ---------- Dataset names ----------
+NAMES = \
+  H_I-6563_bin_2 \
+  H_I-6563_bin_4 \
+  H_I-6563_bin_8 \
+  H_I-6563_mask_bin_2 \
+  H_I-6563_mask_bin_8 \
+  H_I-6563_mask0_bin_2 \
+  H_I-6563_mask0_bin_4 \
+  H_I-6563_mask0_bin_8 \
+  H_I-6563_mask1_bin_2 \
+  H_I-6563_mask1_bin_4 \
+  H_I-6563_mask1_bin_8
+
+# ---------- Paths ----------
+CONF_DIR      = confidence_intervals
+CONF_NOTEBOOK = $(CONF_DIR)/notebook_template_confint.ipynb
+
+# ---------- Default target ----------
+all: $(NAMES:%=$(CONF_DIR)/%_confint.json)
+
+# ---------- Rule for each dataset ----------
+$(CONF_DIR)/%_confint.json:
+	$(eval DATA := $(shell echo $* | sed 's/^H_I-6563_//'))
+	papermill $(CONF_NOTEBOOK) $(CONF_DIR)/$*_confint.ipynb \
+		-p name $* \
+		-p data "$(DATA)"
+
+.PHONY: all

@@ -1,0 +1,3 @@
+all:
+	make -f Makefile_strucfunc_tradeoff_prod
+	make -f Makefile_confint_tradeoff

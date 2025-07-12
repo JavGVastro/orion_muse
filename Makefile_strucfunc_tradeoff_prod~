@@ -1,0 +1,35 @@
+# ---------- Dataset Names (custom order) ----------
+NAMES = \
+  O_III-5007_mask_3_bin_3 \
+  O_III-5007_mask_2_bin_3 \
+  O_III-5007_mask_1_bin_3 \
+  O_III-5007_mask_0_bin_3 \
+  O_III-5007_mask_3_bin_2 \
+  O_III-5007_mask_2_bin_2 \
+  O_III-5007_mask_1_bin_2 \
+  O_III-5007_mask_0_bin_2 \
+  O_III-5007_mask_3_bin_1 \
+  O_III-5007_mask_2_bin_1 \
+  O_III-5007_mask_1_bin_1 \
+  O_III-5007_mask_0_bin_1 \
+  O_III-5007_mask_3_bin_0 \
+  O_III-5007_mask_2_bin_0 \
+  O_III-5007_mask_1_bin_0 \
+  O_III-5007_mask_0_bin_0
+
+
+
+# ---------- Paths ----------
+STRUCT_DIR      = structure_function
+STRUCT_NOTEBOOK = $(STRUCT_DIR)/notebook_template_strucfunc.ipynb
+
+# ---------- Default target ----------
+all: $(NAMES:%=$(STRUCT_DIR)/%_strucfunc.json)
+
+# ---------- Rule for each dataset ----------
+$(STRUCT_DIR)/%_strucfunc.json:
+	@echo "Running structure function for $*"
+	papermill $(STRUCT_NOTEBOOK) $(STRUCT_DIR)/$*_strucfunc.ipynb \
+		-p name $*
+
+.PHONY: all

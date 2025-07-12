@@ -1,0 +1,45 @@
+# Makefile_downsample_prod
+#
+# Purpose:
+# - Runs notebook_template_mask_bin_n_mod.ipynb for the spectral line X.
+# - Reads all run parameters (bins, flux_thresh, sigma_thresh) from
+#   params_downsample_X.json.
+#
+# How it works:
+# - Loops over dataset names defined as keys in the JSON file.
+# - Calls Papermill for each dataset to execute the notebook
+#   with the appropriate parameters.
+#
+# Note:
+# - LINE_NAME is fixed to X for all runs.
+# - Produces executed notebooks and JSON outputs
+#   in the velocity_fields_maps folder.
+
+
+# ---------- Configuration ----------
+LINE_NAME = Ar_III-7136
+TEMPLATE_DIR = templates
+OUTPUT_DIR   = velocity_fields_maps
+TEMPLATE     = $(TEMPLATE_DIR)/notebook_template_bin_mask_n_Ar.ipynb
+PARAMS_FILE   = params_downsample_$(LINE_NAME).json
+
+# ---------- List of dataset names ----------
+NAMES := $(shell python -c "import json; print(' '.join(json.load(open('$(PARAMS_FILE)')).keys()))")
+
+# ---------- Default target ----------
+all: $(NAMES:%=$(OUTPUT_DIR)/%.json)
+
+# ---------- Rule ----------
+$(OUTPUT_DIR)/%.json:
+	@echo "Running Papermill for $*"
+
+	$(eval B := $(shell python -c "import json; d=json.load(open('$(PARAMS_FILE)')); print(d['$*']['bins'])"))
+	$(eval F := $(shell python -c "import json; d=json.load(open('$(PARAMS_FILE)')); print(d['$*']['flux_thresh'])"))
+	$(eval S := $(shell python -c "import json; d=json.load(open('$(PARAMS_FILE)')); print(d['$*']['sigma_thresh'])"))
+
+	papermill $(TEMPLATE) $(OUTPUT_DIR)/$*.ipynb \
+		-p name $(LINE_NAME) \
+		-p name_export $* \
+		-p bins $(B) -p flux_thresh $(F) -p sigma_thresh $(S)
+
+.PHONY: all

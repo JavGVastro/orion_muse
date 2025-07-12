@@ -1,0 +1,26 @@
+# ---------- Configuration ----------
+OUTPUT_DIR   = velocity_fields_maps
+TEMPLATE     = $(OUTPUT_DIR)/notebook_template_mask_bin_n_mod.ipynb
+PARAMS_FILE  = params_downsample_O_III-4959.json
+BASE_NAME    = O_III-4959  # This is the true line name used in the Jupyter notebook
+
+# ---------- List of dataset names ----------
+NAMES := $(shell python -c "import json; print(' '.join(json.load(open('$(PARAMS_FILE)')).keys()))")
+
+# ---------- Default target ----------
+all: $(NAMES:%=$(OUTPUT_DIR)/%.json)
+
+# ---------- Rule ----------
+$(OUTPUT_DIR)/%.json:
+	@echo "Running Papermill for $*"
+
+	$(eval B := $(shell python -c "import json; d=json.load(open('$(PARAMS_FILE)')); print(d['$*']['bins'])"))
+	$(eval F := $(shell python -c "import json; d=json.load(open('$(PARAMS_FILE)')); print(d['$*']['flux_thresh'])"))
+	$(eval S := $(shell python -c "import json; d=json.load(open('$(PARAMS_FILE)')); print(d['$*']['sigma_thresh'])"))
+
+	papermill $(TEMPLATE) $(OUTPUT_DIR)/$*.ipynb \
+		-p name $(BASE_NAME) \
+#		-p name_export $* \
+		-p bins $(B) -p flux_thresh $(F) -p sigma_thresh $(S)
+
+.PHONY: all

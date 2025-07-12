@@ -1,0 +1,22 @@
+# Dataset names
+NAMES =  N_II-6583 S_III-9069
+# Dataset test  names
+# NAMES = H_I-6563 O_III-5007 O_III-4959 N_II-6548
+
+# Paths
+NOTEBOOK = velocity_fields_maps/notebook_template_mask.ipynb
+OUTPUT_DIR = velocity_fields_maps
+
+# Main target
+all: $(NAMES:%=$(OUTPUT_DIR)/%_mask.json)
+
+# Rule to run notebook and save executed version as name_mask.ipynb
+$(OUTPUT_DIR)/%_mask.json:
+	papermill $(NOTEBOOK) $(OUTPUT_DIR)/$(notdir $* )_mask.ipynb -p name $(notdir $*)
+
+.PHONY: all clean
+
+
+
+
+

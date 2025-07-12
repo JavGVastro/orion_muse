@@ -1,0 +1,20 @@
+# ---------- Dataset names ----------
+NAMES = H_I-6563 O_III-5007 O_III-4959 N_II-6548 N_II-6583 S_III-9069
+
+# ---------- Paths ----------
+OUTPUT_DIR   = velocity_fields_maps
+NOTEBOOK_BIN = $(OUTPUT_DIR)/notebook_template_mask_bin_n.ipynb
+
+# ---------- Default target ----------
+#For each NAME in NAMES, create the corresponding file:
+all: $(NAMES:%=$(OUTPUT_DIR)/%_mask_bin.json)
+
+# ---------- Rule for each dataset ----------
+$(OUTPUT_DIR)/%_mask_bin.json:
+	$(eval PARAMS := $(shell python params.py $*))
+	$(eval B := $(shell echo $(PARAMS) | python -c "import sys, json; print(json.load(sys.stdin)['bins'])"))
+	$(eval F := $(shell echo $(PARAMS) | python -c "import sys, json; print(json.load(sys.stdin)['flux'])"))
+	$(eval S := $(shell echo $(PARAMS) | python -c "import sys, json; print(json.load(sys.stdin)['sigma'])"))
+
+	papermill $(NOTEBOOK_BIN) $(OUTPUT_DIR)/$*_mask_bin_$(B).ipynb \
+	-p name $* -p bins $(B) -p flux_thresh $(F) -p sigma_thresh $(S)

@@ -1,0 +1,16 @@
+# ---------- Dataset Names ----------
+NAMES = \
+  H_I-6563_mask1 \
+  H_I-6563_mask0 \
+
+# ---------- Paths ----------
+STRUCT_DIR      = structure_function
+STRUCT_NOTEBOOK = $(STRUCT_DIR)/notebook_template_strucfunc.ipynb
+
+# ---------- Default target ----------
+all: $(NAMES:%=$(STRUCT_DIR)/%_strucfunc.json)
+
+# ---------- Rule for each dataset ----------
+$(STRUCT_DIR)/%_strucfunc.json:
+	papermill $(STRUCT_NOTEBOOK) $(STRUCT_DIR)/$*_strucfunc.ipynb \
+		-p name $*

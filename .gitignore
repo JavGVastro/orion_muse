@@ -19,10 +19,11 @@ Thumbs.db
 /structure_function/H_I-6563_mask_0_bin_0.json
 /structure_function/O_III-5007_mask_0_bin_0.json
 /structure_function/O_III-4959_mask_0_bin_0.json
+/structure_function/O_III-4959_mask_bin_0.json
 /structure_function/N_II-6583_mask_0_bin_0.json
 /structure_function/N_II-6548_mask_0_bin_0.json
 /structure_function/S_III-9069_mask_0_bin_0.json
-
+/structure_function/N_II-6583_mask_bin_4_strucfunc.ipynb
 
 # Ignore all deprecated folders
 **/deprecated/
